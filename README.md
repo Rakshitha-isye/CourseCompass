@@ -1,5 +1,10 @@
 # 🎓 CourseCompass
 ### Personalized E-Learning Recommendation System
+## 🌐 Live Demo
+
+Check out the live application here:
+
+[CourseCompass – Personalized E-Learning Recommendation System](https://coursecompass-hpym.onrender.com)
 
 **CourseCompass** is a personalized e-learning recommendation platform that helps learners discover suitable online courses based on their interests, preferences, and learning activities.
 

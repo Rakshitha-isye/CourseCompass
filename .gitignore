@@ -1,0 +1,7 @@
+Svenv/
+__pycache__/
+*.py[cod]
+elearning.db
+.env
+*.db
+.vscode/

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Explore courses{% endblock %}
+{% block content %}
+<section class="page-intro"><span class="eyebrow">COURSE LIBRARY</span><h1>Explore your next skill.</h1><p>Search the library, filter by category, and rate courses to help personalize your recommendations.</p></section>
+<form class="filters" method="get"><input name="q" value="{{ search }}" placeholder="Search courses or skills…"><select name="category"><option value="">All categories</option>{% for item in categories %}<option value="{{ item.category }}" {% if selected_category == item.category %}selected{% endif %}>{{ item.category }}</option>{% endfor %}</select><button class="button primary" type="submit">Search</button></form>
+<div class="course-grid">
+{% for course in courses %}
+<article class="course-card"><div class="course-icon icon-{{ loop.index % 5 }}">{{ ["⌘","▦","✳","◈","⌁"][loop.index0 % 5] }}</div><div class="course-meta"><span>{{ course.category }}</span><span>★ {{ "%.1f"|format(course.rating) }}</span></div><h3>
+    <a href="{{ url_for('course_detail', course_id=course.id) }}">
+        {{ course.title }}
+    </a>
+</h3><p>{{ course.description }}</p><div class="course-bottom"><span>{{ course.level }} · {{ course.duration }}</span></div>
+{% if session.get('user_id') %}
+<form class="rating-form" method="post" action="{{ url_for('rate_course', course_id=course.id) }}"><label for="rating-{{ course.id }}">Your rating</label><select id="rating-{{ course.id }}" name="rating" required><option value="">Choose ★</option>{% for n in range(5,0,-1) %}<option value="{{ n }}">{{ n }} star{% if n != 1 %}s{% endif %}</option>{% endfor %}</select><button class="button small-button" type="submit">Save rating</button></form>
+<form method="post" action="{{ url_for('interact', course_id=course.id) }}"><button class="quiet-button" type="submit">Save view interaction ↗</button></form>
+{% else %}<p class="login-prompt"><a href="{{ url_for('login') }}">Log in</a> to rate this course and personalize your recommendations.</p>{% endif %}
+</article>
+{% else %}<p>No courses matched. Try another search.</p>{% endfor %}
+</div>
+{% endblock %}

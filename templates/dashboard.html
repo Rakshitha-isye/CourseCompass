@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Your dashboard{% endblock %}
+{% block content %}
+<section class="dashboard-welcome"><div><span class="eyebrow">YOUR PERSONAL LEARNING SPACE</span><h1>Keep growing, {{ user.name.split(' ')[0] }}. <span>✦</span></h1><p>Here are some courses picked using your interests, learner ratings, and course popularity.</p></div><a class="button secondary" href="{{ url_for('courses') }}">Browse library ↗</a></section>
+<section class="section-head"><div><span class="eyebrow">MADE FOR YOUR INTERESTS</span><h2>Recommended for you</h2></div></section>
+<div class="course-grid">
+{% for course in recommendations %}
+<article class="course-card recommended"><div class="course-meta"><span class="pill">✦ For you</span><span>★ {{ "%.1f"|format(course.rating) }}</span></div><h3>{{ course.title }}</h3><p>{{ course.description }}</p><p class="reason">{{ course.recommendation_reason }}</p><div class="course-bottom"><span>{{ course.level }} · {{ course.duration }}</span></div>
+<form class="rating-form" method="post" action="{{ url_for('rate_course', course_id=course.id) }}"><label>Rate this course</label><select name="rating" required><option value="">Choose ★</option>{% for n in range(5,0,-1) %}<option value="{{ n }}">{{ n }} star{% if n != 1 %}s{% endif %}</option>{% endfor %}</select><button class="button small-button" type="submit">Rate</button></form></article>
+{% else %}<p>Course recommendations will appear here once courses are available.</p>{% endfor %}
+</div>
+<section class="preferences panel"><div><span class="eyebrow">TELL US WHAT YOU LIKE</span><h2>Your learning interests</h2><p>Choose categories to guide recommendations, especially when you are new to the platform.</p></div><form method="post" action="{{ url_for('interests') }}" class="interest-form">
+{% set selected = (user.interests or '').split(',') %}
+{% for interest in ['Programming','Data Science','Web Development','Databases','Cloud','Security'] %}<label class="check-pill"><input type="checkbox" name="interests" value="{{ interest }}" {% if interest in selected %}checked{% endif %}><span>{{ interest }}</span></label>{% endfor %}
+<button class="button primary" type="submit">Save interests</button></form></section>
+<section class="section-head"><div><span class="eyebrow">COMMUNITY FAVOURITES</span><h2>Popular courses</h2></div></section>
+<div class="course-grid compact-grid">{% for course in popular %}<article class="course-card"><div class="course-meta"><span>{{ course.category }}</span><span>★ {{ "%.1f"|format(course.rating) }}</span></div><h3>{{ course.title }}</h3><p>{{ course.description }}</p><div class="course-bottom"><span>{{ course.level }} · {{ course.duration }}</span><a href="{{ url_for('courses') }}">View ↗</a></div></article>{% endfor %}</div>
+<section class="panel"><span class="eyebrow">YOUR ACTIVITY</span><h2>Courses you've rated</h2>{% if rated %}<div class="rated-list">{% for course in rated %}<div><span>{{ course.title }}</span><b>★ {{ course.user_rating }}/5</b></div>{% endfor %}</div>{% else %}<p>You haven't rated any courses yet. Rate a few courses to help the recommendation engine learn your preferences.</p>{% endif %}</section>
+{% endblock %}

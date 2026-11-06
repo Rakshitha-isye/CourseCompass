@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Personalized learning{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <span class="eyebrow">YOUR LEARNING JOURNEY, PERSONALIZED</span>
+    <h1>Find the next skill<br><span>worth learning.</span></h1>
+    <p>Discover courses that fit your interests. Learn smarter with recommendations shaped by learner preferences and course ratings.</p>
+    <div class="hero-actions"><a class="button primary" href="{{ url_for('courses') }}">Explore courses →</a><a class="button secondary" href="{{ url_for('register') }}">Create free account</a></div>
+    <div class="mini-proof"><span>✦ Interest-based discovery</span><span>✦ Personalized suggestions</span></div>
+  </div>
+  <div class="hero-card">
+    <div class="orbit">✦</div><p class="card-label">YOUR NEXT CHAPTER</p><h3>Small steps.<br>Big possibilities.</h3>
+    <div class="progress-row"><span>Python Programming</span><b>Recommended</b></div><div class="fake-progress"><span></span></div>
+    <div class="progress-row"><span>Data Science</span><b>Explore</b></div><div class="fake-progress muted"><span></span></div>
+  </div>
+</section>
+<section class="section-head"><div><span class="eyebrow">HANDPICKED FOR DISCOVERY</span><h2>Popular courses</h2></div><a class="text-link" href="{{ url_for('courses') }}">View all courses →</a></section>
+<div class="course-grid">
+{% for course in courses %}
+  <article class="course-card">
+    <div class="course-icon icon-{{ loop.index % 5 }}">{{ ["⌘","▦","✳","◈","⌁"][loop.index0 % 5] }}</div>
+    <div class="course-meta"><span>{{ course.category }}</span><span>★ {{ "%.1f"|format(course.rating) }}</span></div>
+    <h3>{{ course.title }}</h3><p>{{ course.description }}</p>
+    <div class="course-bottom"><span>{{ course.level }} · {{ course.duration }}</span><a href="{{ url_for('courses') }}">Explore ↗</a></div>
+  </article>
+{% endfor %}
+</div>
+{% endblock %}

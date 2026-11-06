@@ -1,0 +1,84 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ course.title }}{% endblock %}
+
+{% block content %}
+
+<section class="page-intro">
+    <span class="eyebrow">COURSE DETAILS</span>
+    <h1>{{ course.title }}</h1>
+    <a href="#learning-resources" class="button primary">
+        Start Learning
+    </a>
+    <p>{{ course.description }}</p>
+</section>
+
+<div class="course-card">
+    <div class="course-meta">
+        <span>{{ course.category }}</span>
+        <span>★ {{ "%.1f"|format(course.rating) }}</span>
+    </div>
+
+    <h2>{{ course.title }}</h2>
+
+    <p>{{ course.description }}</p>
+
+    <p><strong>Level:</strong> {{ course.level }}</p>
+
+    <p><strong>Duration:</strong> {{ course.duration }}</p>
+
+    {% if session.get('user_id') %}
+    <form class="rating-form" method="post"
+          action="{{ url_for('rate_course', course_id=course.id) }}">
+
+        <label for="rating">Rate this course</label>
+
+        <select name="rating" id="rating" required>
+            <option value="">Choose rating</option>
+            {% for n in range(5, 0, -1) %}
+            <option value="{{ n }}">{{ n }} Stars</option>
+            {% endfor %}
+        </select>
+
+        <button class="button primary" type="submit">
+            <hr>
+            <section id="learning-resources">
+                <h2>Start Learning</h2>
+                <p>Explore these resources to improve your knowledge.</p>
+                {% if resources %}
+                <div class="resources-list">
+                    {% for resource in resources %}
+                    <div class="resource-card">
+                        <h3>{{ resource.title }}</h3>
+                        <p>{{ resource.resource_type }}</p>
+                        <a href="{{ resource.url }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="button primary">
+                        Open Resource
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No learning resources available for this course yet.</p>
+            {% endif %}
+        </section>
+        <hr>
+            Submit Rating
+        </button>
+    </form>
+    {% else %}
+    <p>
+        <a href="{{ url_for('login') }}">Login</a>
+        to rate this course.
+    </p>
+    {% endif %}
+
+    <p>
+        <a href="{{ url_for('courses') }}">← Back to Courses</a>
+    </p>
+</div>
+
+{% endblock %}
